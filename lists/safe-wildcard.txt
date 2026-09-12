@@ -1,6 +1,6 @@
 # Title: LG TV Blocklist (safe) — Pi-hole regex filters
-# Updated: 2026-09-12 20:36 UTC
-# Entries: 5
+# Updated: 2026-09-12 21:10 UTC
+# Entries: 14
 #
 # PASTE THESE INTO PI-HOLE'S REGEX FILTERS, NOT AN ADLIST. Adlists accept
 # exact domains only and will silently ignore every line here.
@@ -22,6 +22,15 @@
 
 ^[a-z][a-z]\.emp\.lgsmartplatform\.com$
 ^[a-z][a-z]\.nextlgsdp\.com$
+^(eic|aic|kic)\.ads\.lgtvcommon\.com$
+^(eic|aic|kic)\.api\.lgtviot\.com$
+^(eic|aic|kic)\.cdpbeacon\.lgtvcommon\.com$
+^(eic|aic|kic)\.homeprv\.lgtvcommon\.com$
+^(eic|aic|kic)\.lgtviot\.com$
+^(eic|aic|kic)\.nudge\.lgtvcommon\.com$
+^(eic|aic|kic)\.recommend\.lgtvcommon\.com$
+^(eic|aic|kic)\.tv\.wiselg\.com$
+^(eic|aic|kic)\.wiseconfig\.lgtvcommon\.com$
 (\.|^)adsdtvc\.com$
 (\.|^)lgsmartad\.com$
 (\.|^)lgtvsdp\.com$

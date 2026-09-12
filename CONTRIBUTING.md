@@ -58,6 +58,14 @@ That one line becomes 49 entries at build time. Rules:
   store CDN, `am.`/`ig..lge.com` are unknown services, `su.lge.com` is the OTA
   server. Tagging one of those would emit ~50 bogus store-CDN entries and
   could break the Content Store for every user. CI has a test for this.
+- **Datacentre clusters are a separate axis, listed explicitly.** `eic`
+  (Europe), `aic` (Americas) and `kic` (Korea) front the same service from
+  three continents. They are *not* handled by `[REGION-SCOPED]` — each is its
+  own verified entry, because not every stem exists in every cluster. When you
+  add a clustered host, probe all three and add every one that resolves;
+  submitting only the cluster your own TV uses is how this list ended up
+  missing 53 live endpoints. Tier follows the cluster sibling, never the zone
+  apex: `eic.lgtviot.com` is SAFE, so `aic.`/`kic.lgtviot.com` are too.
 - **Audited entries win.** A hand-written entry is never replaced by its
   generated twin, so annotations and evidence survive.
 - **Generated entries are DNS-verified, not observed.** Each built list's

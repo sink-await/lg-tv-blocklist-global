@@ -1,21 +1,43 @@
 # Title: LG TV Blocklist (safe)
-# Updated: 2026-09-12 20:36 UTC
-# Entries: 20
+# Updated: 2026-09-12 21:10 UTC
+# Entries: 42
 # Note: Lithuania (lt) only -- global entries plus this region's endpoints; other regions' are omitted. Regional endpoints are DNS-verified (they resolve to this region's LG infrastructure), not traffic-observed.
 # License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/)
 
 0.0.0.0 ad.lgappstv.com
 0.0.0.0 ads.lgtvcommon.com
 0.0.0.0 adsdtvc.com
+0.0.0.0 aic.ads.lgtvcommon.com
+0.0.0.0 aic.api.lgtviot.com
+0.0.0.0 aic.cdpbeacon.lgtvcommon.com
+0.0.0.0 aic.homeprv.lgtvcommon.com
+0.0.0.0 aic.lgtviot.com
+0.0.0.0 aic.nudge.lgtvcommon.com
+0.0.0.0 aic.recommend.lgtvcommon.com
+0.0.0.0 aic.tv.wiselg.com
+0.0.0.0 aic.wiseconfig.lgtvcommon.com
 0.0.0.0 cdpbeacon.lgtvcommon.com
+0.0.0.0 eic.ads.lgtvcommon.com
 0.0.0.0 eic.api.lgtviot.com
+0.0.0.0 eic.cdpbeacon.lgtvcommon.com
+0.0.0.0 eic.homeprv.lgtvcommon.com
 0.0.0.0 eic.lgtviot.com
 0.0.0.0 eic.nudge.lgtvcommon.com
+0.0.0.0 eic.recommend.lgtvcommon.com
 0.0.0.0 eic.tv.wiselg.com
 0.0.0.0 eic.wiseconfig.lgtvcommon.com
 0.0.0.0 homeprv.lgtvcommon.com
 0.0.0.0 info.lgsmartad.com
 0.0.0.0 initscr.lge.com
+0.0.0.0 kic.ads.lgtvcommon.com
+0.0.0.0 kic.api.lgtviot.com
+0.0.0.0 kic.cdpbeacon.lgtvcommon.com
+0.0.0.0 kic.homeprv.lgtvcommon.com
+0.0.0.0 kic.lgtviot.com
+0.0.0.0 kic.nudge.lgtvcommon.com
+0.0.0.0 kic.recommend.lgtvcommon.com
+0.0.0.0 kic.tv.wiselg.com
+0.0.0.0 kic.wiseconfig.lgtvcommon.com
 0.0.0.0 lgsmartad.com
 0.0.0.0 lgtvsdp.com
 0.0.0.0 lt.emp.lgsmartplatform.com

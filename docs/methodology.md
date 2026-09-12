@@ -150,8 +150,34 @@ while those blocks are active. Run the diff capture with OTA **allowed**
 (temporarily), update, re-capture, then re-apply the blocks.
 
 Watch region prefixes: endpoints are often region-scoped (`de.`, `fr.`,
-`uk.`, `us.`, …). A run in one region will not reveal another region's
-endpoints.
+`us.`, … — LG uses `gb`, not `uk`). A run in one region will not reveal another
+region's endpoints.
+
+**Also watch datacentre-cluster prefixes.** Separately from country codes, LG
+fronts many services from three regional clusters: `eic` (Europe), `aic`
+(Americas) and `kic` (Korea). The regional CNAME targets confirm the mapping —
+`de.emp.lgsmartplatform.com` is a CNAME to `eic-emp-...`, `us.` to `aic-emp-...`.
+
+This is a trap for anyone auditing from one continent, and it caught this list:
+the German audit only ever observed `eic.*`, so 53 live `aic.*`/`kic.*` twins
+were missing entirely — including the ACR beacon, which had *also* moved. Bare
+`cdpbeacon.lgtvcommon.com` is now NXDOMAIN while `eic`/`aic`/`kic.cdpbeacon...`
+are live, so the list was no longer blocking the beacon at all in the exact-name
+formats.
+
+To check a family for cluster twins, take the stem and probe each prefix:
+
+```sh
+for p in eic aic kic; do
+  for sep in . -; do
+    python scripts/verify.py --file <(echo "$p$sep<stem>")
+  done
+done
+```
+
+Clusters are not countries: a two-letter prefix is a market, a three-letter
+`*ic` prefix is a datacentre. Both need enumerating, and neither implies the
+other.
 
 ## Submitting your data
 

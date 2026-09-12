@@ -55,6 +55,10 @@ LICENSE_LINE = "# License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.
 REGION_TAG_RE = re.compile(r"\[REGION-SCOPED\b([^\]]*)\]")
 REGION_CODE_RE = re.compile(r"^[a-z]{2}$")
 REGIONS_FILE = "regions.txt"
+# Datacentre clusters: eic=Europe, aic=Americas, kic=Korea. Confirmed by the
+# regional CNAME targets (de.* -> eic-*, us.* -> aic-*) seen in CERTIFICATES.md.
+CLUSTER_PREFIXES = ("eic", "aic", "kic")
+CLUSTER_RE = re.compile(r"^(eic|aic|kic)([.-])(.+)$")
 GENERATED_NOTE = (
     "# Note: {n} of these are generated region endpoints ({codes} country codes x "
     "{fams} host families). Generated entries are DNS-verified only -- they "
@@ -266,27 +270,57 @@ def apex_entries(entries: list[str]) -> list[str]:
     return [entry for entry in entries if entry.count(".") == 1]
 
 
-def wildcard_lines(families: dict[str, tuple[str, ...] | None],
-                   apexes: list[str]) -> list[str]:
-    """Pi-hole regex filters: region prefixes per family, then whole apexes.
+def cluster_stems(entries: list[str]) -> list[tuple[str, str]]:
+    """(stem, separator) for datacentre-cluster hosts, e.g. eic.nudge.lgtvcommon.com.
 
-    A family whose own apex is already wildcarded here is skipped -- in STRICT
-    every family sits under a zones.txt apex, so its region regex would be
-    dead weight behind a rule that already matches the whole subtree.
+    LG fronts these services from eic (Europe), aic (Americas) and kic (Korea).
+    Region prefixes are two letters, so the ^[a-z][a-z]\\. regexes do not reach
+    three-letter cluster names -- they need their own pattern or a SAFE wildcard
+    user silently misses the cluster telemetry hosts entirely.
+    """
+    found: dict[tuple[str, str], None] = {}
+    for entry in entries:
+        match = CLUSTER_RE.match(entry)
+        if match:
+            found.setdefault((match.group(3), match.group(2)), None)
+    return sorted(found)
+
+
+def wildcard_lines(families: dict[str, tuple[str, ...] | None],
+                   apexes: list[str],
+                   clusters: list[tuple[str, str]] | None = None) -> list[str]:
+    """Pi-hole regex filters: region prefixes, cluster prefixes, whole apexes.
+
+    Anything already matched by an apex wildcard in this same file is skipped --
+    in STRICT every family sits under a zones.txt apex, so its narrower regex
+    would be dead weight behind a rule that matches the whole subtree.
     """
     apex_set = {apex.lower() for apex in apexes}
+
+    def covered(host: str) -> bool:
+        """True if an apex wildcard in this file already matches host."""
+        return ".".join(host.split(".")[-2:]) in apex_set
+
+    alt = "|".join(CLUSTER_PREFIXES)
     lines = [
         f"^[a-z][a-z]\\.{re.escape(fam)}$"
-        for fam in sorted(families)
-        if ".".join(fam.split(".")[-2:]) not in apex_set
+        for fam in sorted(families) if not covered(fam)
+    ]
+    # Region prefixes are 2 letters, so the pattern above cannot reach the
+    # 3-letter datacentre clusters; without these a SAFE wildcard user silently
+    # misses every cluster telemetry host, the ACR beacon included.
+    lines += [
+        f"^({alt})\\{sep}{re.escape(stem)}$"
+        for stem, sep in (clusters or []) if not covered(stem)
     ]
     lines += [f"(\\.|^){re.escape(apex)}$" for apex in sorted(apex_set)]
     return lines
 
 
 def compile_wildcard(tier: str, families: dict[str, tuple[str, ...] | None],
-                     apexes: list[str]) -> str:
-    lines = wildcard_lines(families, apexes)
+                     apexes: list[str],
+                     clusters: list[tuple[str, str]] | None = None) -> str:
+    lines = wildcard_lines(families, apexes, clusters)
     head = [row.format(tier=tier, updated=now_utc(), n=len(lines))
             for row in WILDCARD_HEADER]
     return "\n".join(head + lines) + "\n"
@@ -406,10 +440,12 @@ def dry_run() -> dict[str, str]:
     safe_pats = region_patterns("safe.txt")
     strict_pats = region_patterns("strict.txt")
     safe_apexes = apex_entries(parse_src("safe.txt"))
-    all_outputs["safe-wildcard.txt"] = compile_wildcard("safe", safe_pats, safe_apexes)
+    all_outputs["safe-wildcard.txt"] = compile_wildcard(
+        "safe", safe_pats, safe_apexes, cluster_stems(safe))
     all_outputs["strict-wildcard.txt"] = compile_wildcard(
         "strict", {**safe_pats, **strict_pats},
-        safe_apexes + apex_entries(parse_src("strict.txt")) + zones)
+        safe_apexes + apex_entries(parse_src("strict.txt")) + zones,
+        cluster_stems(safe + strict_delta))
     return all_outputs
 
 

@@ -1,6 +1,6 @@
 # Title: LG TV Blocklist (strict)
-# Updated: 2026-09-12 20:36 UTC
-# Entries: 320
+# Updated: 2026-09-12 21:10 UTC
+# Entries: 373
 # Note: 259 of these are generated region endpoints (49 country codes x 6 host families). Generated entries are DNS-verified only -- they resolve to that region's LG infrastructure -- not traffic-observed. The audited entries are annotated in src/.
 # License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/)
 
@@ -8,6 +8,28 @@ a.lgappstv.com
 ad.lgappstv.com
 ads.lgtvcommon.com
 adsdtvc.com
+aic-gfts.lge.com
+aic-ngfts.lge.com
+aic-ngfts.nextlgsdp.com
+aic-ngfts.tv.wiselg.com
+aic-ocp.lgtviot.com
+aic-op-lss.lgthinq.com
+aic.ads.lgtvcommon.com
+aic.api.lgtviot.com
+aic.cdpbeacon.lgtvcommon.com
+aic.cdplauncher.lgtvcommon.com
+aic.homeprv.lgtvcommon.com
+aic.lgchhomeapp.lgtvcommon.com
+aic.lgeapi.com
+aic.lggalleryplus.com
+aic.lgshopsvc.lgappstv.com
+aic.lgthinq.com
+aic.lgtviot.com
+aic.nudge.lgtvcommon.com
+aic.recommend.lgtvcommon.com
+aic.service.lgtvcommon.com
+aic.tv.wiselg.com
+aic.wiseconfig.lgtvcommon.com
 am.lge.com
 ar.emp.lgsmartplatform.com
 ar.ibs.nextlgsdp.com
@@ -102,14 +124,24 @@ ee.lgtvsdp.com
 ee.nextlgsdp.com
 eic-gfts.lge.com
 eic-ngfts.lge.com
+eic-ngfts.nextlgsdp.com
 eic-ngfts.tv.wiselg.com
 eic-ocp.lgtviot.com
 eic-op-lss.lgthinq.com
+eic.ads.lgtvcommon.com
 eic.api.lgtviot.com
+eic.cdpbeacon.lgtvcommon.com
 eic.cdplauncher.lgtvcommon.com
+eic.homeprv.lgtvcommon.com
 eic.lgchhomeapp.lgtvcommon.com
+eic.lgeapi.com
+eic.lggalleryplus.com
+eic.lgshopsvc.lgappstv.com
+eic.lgthinq.com
 eic.lgtviot.com
 eic.nudge.lgtvcommon.com
+eic.recommend.lgtvcommon.com
+eic.service.lgtvcommon.com
 eic.tv.wiselg.com
 eic.wiseconfig.lgtvcommon.com
 es.emp.lgsmartplatform.com
@@ -179,6 +211,27 @@ jp.info.lgsmartad.com
 jp.lgeapi.com
 jp.lgtvsdp.com
 jp.nextlgsdp.com
+kic-gfts.lge.com
+kic-ngfts.lge.com
+kic-ngfts.nextlgsdp.com
+kic-ngfts.tv.wiselg.com
+kic-ocp.lgtviot.com
+kic-op-lss.lgthinq.com
+kic.ads.lgtvcommon.com
+kic.api.lgtviot.com
+kic.cdpbeacon.lgtvcommon.com
+kic.cdplauncher.lgtvcommon.com
+kic.homeprv.lgtvcommon.com
+kic.lgchhomeapp.lgtvcommon.com
+kic.lgeapi.com
+kic.lggalleryplus.com
+kic.lgthinq.com
+kic.lgtviot.com
+kic.nudge.lgtvcommon.com
+kic.recommend.lgtvcommon.com
+kic.service.lgtvcommon.com
+kic.tv.wiselg.com
+kic.wiseconfig.lgtvcommon.com
 kr.emp.lgsmartplatform.com
 kr.ibs.nextlgsdp.com
 kr.info.lgsmartad.com

@@ -1,21 +1,43 @@
 # Title: LG TV Blocklist (safe)
-# Updated: 2026-09-12 20:36 UTC
-# Entries: 20
+# Updated: 2026-09-12 21:10 UTC
+# Entries: 42
 # Note: Mexico (mx) only -- global entries plus this region's endpoints; other regions' are omitted. Regional endpoints are DNS-verified (they resolve to this region's LG infrastructure), not traffic-observed.
 # License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/)
 
 ad.lgappstv.com
 ads.lgtvcommon.com
 adsdtvc.com
+aic.ads.lgtvcommon.com
+aic.api.lgtviot.com
+aic.cdpbeacon.lgtvcommon.com
+aic.homeprv.lgtvcommon.com
+aic.lgtviot.com
+aic.nudge.lgtvcommon.com
+aic.recommend.lgtvcommon.com
+aic.tv.wiselg.com
+aic.wiseconfig.lgtvcommon.com
 cdpbeacon.lgtvcommon.com
+eic.ads.lgtvcommon.com
 eic.api.lgtviot.com
+eic.cdpbeacon.lgtvcommon.com
+eic.homeprv.lgtvcommon.com
 eic.lgtviot.com
 eic.nudge.lgtvcommon.com
+eic.recommend.lgtvcommon.com
 eic.tv.wiselg.com
 eic.wiseconfig.lgtvcommon.com
 homeprv.lgtvcommon.com
 info.lgsmartad.com
 initscr.lge.com
+kic.ads.lgtvcommon.com
+kic.api.lgtviot.com
+kic.cdpbeacon.lgtvcommon.com
+kic.homeprv.lgtvcommon.com
+kic.lgtviot.com
+kic.nudge.lgtvcommon.com
+kic.recommend.lgtvcommon.com
+kic.tv.wiselg.com
+kic.wiseconfig.lgtvcommon.com
 lgsmartad.com
 lgtvsdp.com
 mx.emp.lgsmartplatform.com

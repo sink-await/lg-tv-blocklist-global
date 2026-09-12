@@ -1,12 +1,21 @@
 # Title: LG TV Blocklist (safe)
-# Updated: 2026-09-12 20:36 UTC
-# Entries: 212
+# Updated: 2026-09-12 21:10 UTC
+# Entries: 234
 # Note: 192 of these are generated region endpoints (49 country codes x 6 host families). Generated entries are DNS-verified only -- they resolve to that region's LG infrastructure -- not traffic-observed. The audited entries are annotated in src/.
 # License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/)
 
 ||ad.lgappstv.com^
 ||ads.lgtvcommon.com^
 ||adsdtvc.com^
+||aic.ads.lgtvcommon.com^
+||aic.api.lgtviot.com^
+||aic.cdpbeacon.lgtvcommon.com^
+||aic.homeprv.lgtvcommon.com^
+||aic.lgtviot.com^
+||aic.nudge.lgtvcommon.com^
+||aic.recommend.lgtvcommon.com^
+||aic.tv.wiselg.com^
+||aic.wiseconfig.lgtvcommon.com^
 ||ar.emp.lgsmartplatform.com^
 ||ar.info.lgsmartad.com^
 ||ar.lgtvsdp.com^
@@ -72,9 +81,13 @@
 ||ee.info.lgsmartad.com^
 ||ee.lgtvsdp.com^
 ||ee.nextlgsdp.com^
+||eic.ads.lgtvcommon.com^
 ||eic.api.lgtviot.com^
+||eic.cdpbeacon.lgtvcommon.com^
+||eic.homeprv.lgtvcommon.com^
 ||eic.lgtviot.com^
 ||eic.nudge.lgtvcommon.com^
+||eic.recommend.lgtvcommon.com^
 ||eic.tv.wiselg.com^
 ||eic.wiseconfig.lgtvcommon.com^
 ||es.emp.lgsmartplatform.com^
@@ -124,6 +137,15 @@
 ||jp.info.lgsmartad.com^
 ||jp.lgtvsdp.com^
 ||jp.nextlgsdp.com^
+||kic.ads.lgtvcommon.com^
+||kic.api.lgtviot.com^
+||kic.cdpbeacon.lgtvcommon.com^
+||kic.homeprv.lgtvcommon.com^
+||kic.lgtviot.com^
+||kic.nudge.lgtvcommon.com^
+||kic.recommend.lgtvcommon.com^
+||kic.tv.wiselg.com^
+||kic.wiseconfig.lgtvcommon.com^
 ||kr.emp.lgsmartplatform.com^
 ||kr.info.lgsmartad.com^
 ||kr.lgtvsdp.com^

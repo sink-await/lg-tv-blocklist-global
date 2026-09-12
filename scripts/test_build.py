@@ -285,6 +285,30 @@ class TestWildcard(unittest.TestCase):
         self.assertIn("NOT AN ADLIST", out.upper())
         self.assertIn("# Entries: 1", out)
 
+    def test_cluster_stems_detected_with_either_separator(self):
+        self.assertEqual(
+            build.cluster_stems(["eic.nudge.lgtvcommon.com", "aic.nudge.lgtvcommon.com",
+                                 "eic-ngfts.lge.com", "snu.lge.com", "de.lgeapi.com"]),
+            [("ngfts.lge.com", "-"), ("nudge.lgtvcommon.com", ".")])
+
+    def test_cluster_regex_covers_all_three_datacentres(self):
+        # Region prefixes are 2 letters, so ^[a-z][a-z]\. cannot reach eic/aic/kic.
+        # Without a cluster pattern a SAFE wildcard user misses the ACR beacon.
+        lines = build.wildcard_lines({}, [], [("cdpbeacon.lgtvcommon.com", ".")])
+        pat = re.compile(lines[0])
+        for cluster in ("eic", "aic", "kic"):
+            self.assertTrue(pat.search(f"{cluster}.cdpbeacon.lgtvcommon.com"), cluster)
+        self.assertFalse(pat.search("cdpbeacon.lgtvcommon.com"))
+        self.assertFalse(pat.search("xx.cdpbeacon.lgtvcommon.com"))
+
+    def test_cluster_stem_under_wildcarded_apex_is_skipped(self):
+        # STRICT wildcards lgtvcommon.com wholesale, so the narrower cluster
+        # pattern would be dead weight behind it.
+        self.assertEqual(
+            build.wildcard_lines({}, ["lgtvcommon.com"],
+                                 [("cdpbeacon.lgtvcommon.com", ".")]),
+            [r"(\.|^)lgtvcommon\.com$"])
+
     def test_every_wildcard_line_is_a_valid_regex(self):
         out = build.compile_wildcard(
             "strict", {"emp.lgsmartplatform.com": None, "ibs.nextlgsdp.com": ("de",)},
