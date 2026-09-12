@@ -45,6 +45,8 @@ If your blocker does wildcards, **17 regex lines replace all 320 exact entries**
 
 **Pi-hole: these go in Regex filters, not an adlist.** An adlist accepts exact domains only and will silently ignore every line, leaving you unprotected with no error. Paste them under *Domains → Add domain → Regex*, or `pihole --regex '<line>'` per line.
 
+> **Pasted these before 2026-09-12? Re-paste.** Pi-hole never refreshes regex filters the way it refreshes an adlist, so a copy from before that date is frozen — and the SAFE set grew from 5 lines to 14 when LG moved its telemetry behind datacentre-cluster names, the ACR beacon included. Subscribers to the `-domains.txt` lists below got that automatically and need do nothing. What changed and how it was found: [verification](docs/verification.md), [methodology](docs/methodology.md#dns-log-correlation).
+
 **AdGuard Home / uBlock Origin users can skip this file** — the `-adblock.txt` lists below already wildcard via `||name^`.
 
 Wildcards cover the region-prefixed hosts and whole zone families. The specific audited hosts have no wildcard equivalent, so pair this with a `-domains.txt` subscription below for full coverage.
@@ -60,8 +62,6 @@ Pick a tier above, then load the matching file into your blocker:
 | Rooted TV `/etc/hosts` | [safe-hosts.txt](https://raw.githubusercontent.com/sink-await/lg-tv-blocklist-global/main/lists/safe-hosts.txt) | [strict-hosts.txt](https://raw.githubusercontent.com/sink-await/lg-tv-blocklist-global/main/lists/strict-hosts.txt) |
 
 Checksums: [SHA256SUMS](https://raw.githubusercontent.com/sink-await/lg-tv-blocklist-global/main/lists/SHA256SUMS).
-
-> **2026-09-12 — if you used an earlier version, update.** LG moved several telemetry hosts behind datacentre-cluster names (`eic` Europe, `aic` Americas, `kic` Korea) and retired the bare ones. The original audit ran in Germany and only ever saw `eic.*`, so **53 live endpoints were missing** — including the ACR beacon, which the exact-name lists had stopped blocking entirely once `cdpbeacon.lgtvcommon.com` became NXDOMAIN. All three clusters are now covered. Details: [methodology](docs/methodology.md#dns-log-correlation), [verification](docs/verification.md).
 
 **These lists already cover every region** — 49 country codes across 6 regional host families. You do not need to pick your country: the files above work anywhere. Most of those entries are generated and DNS-verified rather than traffic-observed; the distinction is annotated in `src/` and explained in the [region FAQ](docs/faq.md#do-the-lists-work-outside-germany).
 
@@ -131,7 +131,7 @@ Right-click → copy link for your country, paste into your blocker. These carry
 
 <!-- END COUNTRY LINKS -->
 
-**Rooted TV (webosbrew / Homebrew Channel):** mirror the `-hosts.txt` entries into `/etc/hosts`; a webosbrew `init.d` hook (a boot-time script) can rewrite that file at every boot (it lives in RAM and resets on reboot — mechanism: [webosbrew filesystem-overlays](https://www.webosbrew.org/pages/filesystem-overlays)). Mirror `src/safe.txt`, or `src/strict.txt` for the full lockdown. Separately, [`examples/webos-hooks/`](examples/webos-hooks/) ships a boot hook that forces all TV DNS through your resolver and drops encrypted DNS (DoT/DoQ, port 853) — the fix for the hardcoded-resolver bypass in [caveat 1](#the-two-caveats). Rollback and caveats: [hook README](examples/webos-hooks/README.md).
+**Rooted TV (webosbrew / Homebrew Channel):** mirror the `-hosts.txt` entries into `/etc/hosts` — re-mirror rather than relying on an old copy, since entries are added as LG moves endpoints; a webosbrew `init.d` hook (a boot-time script) can rewrite that file at every boot (it lives in RAM and resets on reboot — mechanism: [webosbrew filesystem-overlays](https://www.webosbrew.org/pages/filesystem-overlays)). Mirror `src/safe.txt`, or `src/strict.txt` for the full lockdown. Separately, [`examples/webos-hooks/`](examples/webos-hooks/) ships a boot hook that forces all TV DNS through your resolver and drops encrypted DNS (DoT/DoQ, port 853) — the fix for the hardcoded-resolver bypass in [caveat 1](#the-two-caveats). Rollback and caveats: [hook README](examples/webos-hooks/README.md).
 
 ## The two caveats
 
