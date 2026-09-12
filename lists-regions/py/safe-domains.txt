@@ -1,0 +1,26 @@
+# Title: LG TV Blocklist (safe)
+# Updated: 2026-09-12 20:36 UTC
+# Entries: 20
+# Note: Paraguay (py) only -- global entries plus this region's endpoints; other regions' are omitted. Regional endpoints are DNS-verified (they resolve to this region's LG infrastructure), not traffic-observed.
+# License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/)
+
+ad.lgappstv.com
+ads.lgtvcommon.com
+adsdtvc.com
+cdpbeacon.lgtvcommon.com
+eic.api.lgtviot.com
+eic.lgtviot.com
+eic.nudge.lgtvcommon.com
+eic.tv.wiselg.com
+eic.wiseconfig.lgtvcommon.com
+homeprv.lgtvcommon.com
+info.lgsmartad.com
+initscr.lge.com
+lgsmartad.com
+lgtvsdp.com
+py.emp.lgsmartplatform.com
+py.info.lgsmartad.com
+py.lgtvsdp.com
+py.nextlgsdp.com
+recommend.lgtvcommon.com
+smart.adtvc.app

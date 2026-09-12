@@ -21,11 +21,38 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 LISTS = ROOT / "lists"
+REGIONS_FILE = ROOT / "src" / "regions.txt"
 DEFAULT_OUT_ROOT = ROOT / "lists-regions"
 
-# Labels observed in the audit; extend when src/ gains new region-prefixed entries.
-SOURCE_REGION_LABELS = ("de", "us")
+# Fallback for a checkout with no src/regions.txt: the two labels the audit
+# observed directly. Kept as a literal so localize.py still works standalone.
+FALLBACK_REGION_LABELS = ("de", "us")
+
+
+def source_region_labels() -> tuple[str, ...]:
+    """Every country code the built lists may carry, from src/regions.txt.
+
+    Read from regions.txt rather than hardcoded: build.py generates an entry
+    per code there, so a stale literal here would silently leave most regions
+    un-rewritten and emit a list mixing 40+ foreign endpoints into a
+    single-country file.
+
+    Region detection stays an explicit label set, never a two-letter-prefix
+    regex: ad., su., am., ig. are recon-verified false positives (an ad host,
+    the OTA server, two unknown services) and must never be rewritten.
+    """
+    if not REGIONS_FILE.is_file():
+        return FALLBACK_REGION_LABELS
+    codes = []
+    for raw in REGIONS_FILE.read_text(encoding="utf-8").splitlines():
+        code = raw.split("#", 1)[0].strip().lower()
+        if REGION_RE.match(code):
+            codes.append(code)
+    return tuple(codes) or FALLBACK_REGION_LABELS
+
+
 REGION_RE = re.compile(r"^[a-z]{2}$")
+SOURCE_REGION_LABELS = source_region_labels()
 EXPECTED_FILES = (
     "safe-adblock.txt",
     "safe-domains.txt",
@@ -59,6 +86,7 @@ def rewrite_content(text: str, region: str) -> tuple[str, int]:
     if not lines:
         return text, 0
     out: list[str] = []
+    seen: set[str] = set()
     rewritten = 0
     marker_added = False
     for line in lines:
@@ -72,11 +100,23 @@ def rewrite_content(text: str, region: str) -> tuple[str, int]:
             out.append(line)
             continue
         new_line = rewrite_entry(line, region)
+        # Siblings of different source regions (de./us.) collapse onto the same
+        # target name; emit it once instead of duplicating the entry.
+        if new_line in seen:
+            continue
+        seen.add(new_line)
         if new_line != line:
             rewritten += 1
         out.append(new_line)
     if not marker_added:  # header-only content
         out.append(LOCALIZED_MARKER.format(region=region))
+    # Header fixups. The source header describes the all-region build, so after
+    # collapsing every country code onto one its entry count is far too high
+    # (349 vs 61 for a single country) and its generated-endpoint note counts
+    # families this file no longer contains. Correct the count, drop the note.
+    out = [line for line in out if not line.startswith("# Note:")]
+    out = [f"# Entries: {len(seen)}" if line.startswith("# Entries:") else line
+           for line in out]
     return "\n".join(out) + "\n", rewritten
 
 

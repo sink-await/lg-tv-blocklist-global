@@ -24,10 +24,15 @@ STRICT blocks whole zones (`||lge.com^`, `||lgeapi.com^`, `||nextlgsdp.com^`, ..
 **Starting point (community-testing — not yet G1-verified; trim it with your own query log):**
 
 ```text
-# SDP/store comms — needed with the adblock lists (our ||lgtvsdp.com^ covers de.); domains/hosts users can drop it:
+# SDP/store comms — needed with the adblock lists (our ||lgtvsdp.com^ covers de./us.); domains/hosts users can drop it.
+# Keep the group matching your TV's region; delete the other.
 @@||de.lgtvsdp.com^
 @@||de.lgeapi.com^
 @@||de.ibs.nextlgsdp.com^
+# US TVs:
+@@||us.lgtvsdp.com^
+@@||us.lgeapi.com^
+@@||us.ibs.nextlgsdp.com^
 @@||a.lgappstv.com^
 # Add only if your query log shows the store hitting them:
 # @@||qt2-ngp-gl-prv-front.lge.com^
@@ -42,7 +47,7 @@ STRICT blocks whole zones (`||lge.com^`, `||lgeapi.com^`, `||nextlgsdp.com^`, ..
 # @@||lgtvonline.lge.com^
 ```
 
-**Region prefixes:** the `de.` hosts above are what the German G1 audit saw — if your TV is in another region, swap `de.` for your prefix (`fr.`, `uk.`, `us.`, …) and confirm the exact hostnames against your query log. The blocked zones themselves are region-agnostic in the adblock lists (`||lgeapi.com^` also covers `fr.lgeapi.com`), so only the exceptions need adjusting.
+**Region prefixes:** the `de.` hosts above are what the German G1 audit saw; the `us.` set is its US sibling. All 49 shipped codes are blocked, so swap the prefix for your own (`fr.`, `br.`, `gb.` — LG uses `gb`, not `uk`) and confirm the exact hostnames against your query log. The blocked zones themselves are region-agnostic in the adblock lists (`||lgeapi.com^` also covers `fr.lgeapi.com`), so only the exceptions need adjusting.
 
 Confidence varies — that is why this is a starting point, not gospel. STRICT annotates `de.lgeapi.com` as *store/billing interplay unproven* and `de.ibs.nextlgsdp.com` as *store risk* (both are caught by their zone anchors), and `a.lgappstv.com` as *app-update function unproven*. External sources fill the rest: `lgeapi.com` is the region App Store backend (public reverse-engineering, e.g. webos-unclutter); `lgtvsdp.com` is LG's Service Delivery Platform ("responsible for Content Store communication among others" — webosbrew wiki) — our SAFE tier blocks its apex, so with the adblock lists `||lgtvsdp.com^` covers `de.lgtvsdp.com` and this exception is needed for store comms; with domains/hosts lists (exact-name) it is unnecessary; `nextlgsdp.com` may carry in-app billing; `lgappstv.com` is the store CDN apex.
 
@@ -92,17 +97,19 @@ Because they never leave the LAN. Reverse lookups under `in-addr.arpa` are answe
 
 AdGuard Home evaluates `@@` exceptions at the engine level, but the official docs only guarantee modifier semantics (`$important`, `$badfilter`) for rule-style filters — modifiers do not work with `/etc/hosts`-style entries. Our lists use no modifiers, so a plain `@@` exception works; still, for AdGuard Home we recommend the `-adblock.txt` URL anyway, because only the adblock format gives whole-zone semantics for STRICT's zone anchors.
 
-## I'm not in Germany — do the lists still work for me?
+## Do the lists work outside Germany?
 
-Depends on your tier and format. In **adblock** format, **STRICT is region-complete**: its zone anchors (`||lgeapi.com^`, `||nextlgsdp.com^`, ...) and apex entries (`||lgsmartad.com^`, `||lgtvsdp.com^`) match every subdomain, including region-prefixed hosts like `fr.lgeapi.com` and `fr.nextlgsdp.com`.
+Yes — the shipped lists cover **49 country codes** across the 6 regional host families, so every format works in every listed region with no localization step. That is a change from earlier versions, which only carried `de.` (and one `us.`) prefixes.
 
-**SAFE's adblock list only covers region siblings under the apexes it actually contains.** It blocks the `lgsmartad.com` and `lgtvsdp.com` families wholesale (`||lgsmartad.com^`, `||lgtvsdp.com^`), so `fr.info.lgsmartad.com` and `fr.lgtvsdp.com` are caught. But `nextlgsdp.com` and `lgsmartplatform.com` are STRICT-only zones: SAFE has no `||nextlgsdp.com^` or `||lgsmartplatform.com^`, so `fr.nextlgsdp.com` and `fr.emp.lgsmartplatform.com` are **not** covered by SAFE's adblock list.
+**How the coverage is built.** LG runs a per-country endpoint matrix: `de.lgeapi.com`, `us.lgeapi.com`, `br.lgeapi.com` and so on all exist. The audit observed the German ones; `scripts/build.py` then cross-products each entry tagged `[REGION-SCOPED]` in `src/` against every code in `src/regions.txt`. One audited host per family therefore yields all-region coverage.
 
-The **domains/hosts formats are exact-name** for everyone: `de.lgeapi.com` does not block `fr.lgeapi.com`, and hosts files cannot wildcard subdomains — so those formats only cover the region prefixes present in the lists, and they are where `localize.py` matters most.
+**What that means for evidence.** Generated entries are **DNS-verified, not traffic-observed**: each name resolves to that region's LG infrastructure (checked 2026-09-12), but no capture proves a TV in that region queries it. The audited entries keep their annotations in `src/`, and every built list's header says how many of its entries are generated. Blocking an endpoint your TV never contacts is inert, so the over-inclusion costs you nothing — but it is inference, and the list says so rather than pretending otherwise.
 
-For exact-name use outside Germany, localize the built lists with `python scripts/localize.py --region us`. That writes `lists-regions/us/` (all 6 lists plus `SHA256SUMS`), rewriting only region-prefixed entries (`de.`/`us.`). The output header marks the result **unaudited** — most endpoints for your region were never observed in our German audit, so verify against your own query log before relying on them.
+**Why format still matters.** In **adblock** format, STRICT was already region-complete before any of this: its zone anchors (`||lgeapi.com^`, `||nextlgsdp.com^`, ...) and apex entries (`||lgsmartad.com^`, `||lgtvsdp.com^`) match every subdomain. SAFE's adblock list only covers region siblings under the apexes it actually contains — it has no `||nextlgsdp.com^` or `||lgsmartplatform.com^`, since those are STRICT-only zones. The **domains/hosts formats are exact-name** and cannot wildcard subdomains, so they depend entirely on enumeration; they are what the cross-product exists to fill.
 
-If you have that query log, it is exactly the evidence needed to extend the `de.*`/`us.*` entries upstream — see [CONTRIBUTING](../CONTRIBUTING.md).
+**Want a smaller list?** The README's [per-country links](../README.md#per-country-lists) serve one region each — about 61 entries instead of 320. `scripts/build.py build` writes them all; it knows which families exist in which market, so it never emits a name that NXDOMAINs there. For a region **not** in `src/regions.txt`, `python scripts/localize.py --region <cc>` rewrites the built lists onto that code instead.
+
+**If your region is missing,** or you have a query log proving which of these your TV actually contacts, that is exactly the evidence this list wants — see [CONTRIBUTING](../CONTRIBUTING.md). A code only needs adding to `src/regions.txt` once it is verified to resolve.
 
 ## Why is a domain missing / how do I report a false positive?
 

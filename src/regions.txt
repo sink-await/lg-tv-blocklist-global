@@ -1,0 +1,69 @@
+# LG TV Blocklist — country codes with confirmed LG regional endpoints.
+#
+# scripts/build.py cross-products every code here against each entry tagged
+# [REGION-SCOPED] in safe.txt / strict.txt, so one audited host per family
+# yields all-region coverage in the exact-name formats (-domains / -hosts),
+# which cannot wildcard subdomains.
+#
+# Evidence: DNS-verified 2026-09-12 against 8.8.8.8, cross-checked on 1.1.1.1
+# and 9.9.9.9. The full 294-name matrix (49 codes x 6 families) was probed, not
+# sampled: 265 resolve. The 29 that do not are all ibs.nextlgsdp.com, scoped to
+# its 20 live markets by an explicit subset in the tag. A negative control
+# (zz./qq./xj. against every family) NXDOMAINs, so no wildcard inflates this.
+#
+# Generated entries are therefore existence-verified, NOT traffic-observed:
+# no capture proves a TV in that region queries them. See docs/methodology.md.
+#
+# 'uk' is deliberately absent: LG uses 'gb'. It was probed and does NOT resolve.
+# Adding a code costs one line; verify it resolves first.
+# License: CC BY 4.0.
+
+ar # Argentina
+at # Austria
+au # Australia
+be # Belgium
+bg # Bulgaria
+bo # Bolivia
+br # Brazil
+ca # Canada
+ch # Switzerland
+cl # Chile
+co # Colombia
+cz # Czechia
+de # Germany — audit origin (LG G1)
+dk # Denmark
+ec # Ecuador
+ee # Estonia
+es # Spain
+fi # Finland
+fr # France
+gb # United Kingdom (NOT 'uk')
+gr # Greece
+hr # Croatia
+hu # Hungary
+ie # Ireland
+in # India
+it # Italy
+jp # Japan
+kr # South Korea
+lt # Lithuania
+lv # Latvia
+mx # Mexico
+nl # Netherlands
+no # Norway
+nz # New Zealand
+pe # Peru
+pl # Poland
+pt # Portugal
+py # Paraguay
+ro # Romania
+ru # Russia
+se # Sweden
+si # Slovenia
+sk # Slovakia
+tr # Turkey
+ua # Ukraine
+us # United States
+uy # Uruguay
+ve # Venezuela
+za # South Africa

@@ -25,8 +25,8 @@ service.lgtvcommon.com # STRICT: weak — common-services endpoint, store interp
 a.lgappstv.com # STRICT: weak — store-CDN-adjacent, app-update function unproven
 lgappstv.com # STRICT: weak — store CDN apex (blocking apex = exact-name only in hosts/domains)
 fms.lgunifiedsmart.com # STRICT: weak — smart-family messaging service
-de.lgeapi.com # STRICT: weak — region API, store/billing interplay unproven
-de.ibs.nextlgsdp.com # STRICT: weak — possible in-app billing path (store risk)
+de.lgeapi.com # STRICT: weak — region API, store/billing interplay unproven [REGION-SCOPED]
+de.ibs.nextlgsdp.com # STRICT: weak — possible in-app billing path (store risk) [REGION-SCOPED: ar at au br ca ch cl co de es fr gb in it jp kr mx nl se us] — in-app billing exists in 20 of 49 markets; the other 29 NXDOMAIN (verified 2026-09-12 against 8.8.8.8, 1.1.1.1, 9.9.9.9)
 eic-ocp.lgtviot.com # STRICT: weak — unknown (DNS only; unrelated to the local panel-compensation daemon)
 eic.cdplauncher.lgtvcommon.com # STRICT: weak — content-launcher/CDP service
 eic.lgchhomeapp.lgtvcommon.com # STRICT: weak — home-app service

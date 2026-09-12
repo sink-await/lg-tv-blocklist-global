@@ -24,11 +24,16 @@ MARKER_FR = ("# Localized: fr \u2014 regional endpoints are NOT audited for this
 
 REGION_HOSTS = (
     "de.nextlgsdp.com",
+    "us.nextlgsdp.com",
     "de.info.lgsmartad.com",
+    "us.info.lgsmartad.com",
     "de.emp.lgsmartplatform.com",
+    "us.emp.lgsmartplatform.com",
     "us.lgtvsdp.com",
     "de.lgeapi.com",
+    "us.lgeapi.com",
     "de.ibs.nextlgsdp.com",
+    "us.ibs.nextlgsdp.com",
 )
 
 # Two-letter labels that look like region prefixes but are not (recon-verified).
@@ -84,23 +89,44 @@ class TestRewriteContent(unittest.TestCase):
         entries = [l for l in out.splitlines() if l and not l.startswith("#")]
         self.assertEqual(entries, list(FALSE_POSITIVES))
 
-    def test_header_marker_added_and_entries_line_unchanged(self):
+    def test_header_marker_added_and_entries_line_corrected(self):
         out, _ = localize.rewrite_content(HEADER + "de.nextlgsdp.com\n", "fr")
         lines = out.splitlines()
         self.assertEqual(lines[4], MARKER_FR)
         self.assertEqual(lines[5], "")
         self.assertEqual(lines[6], "fr.nextlgsdp.com")
-        self.assertIn("# Entries: 3", out)
+        # The source header said 3; collapsing regions leaves 1, and a header
+        # overstating the count by 288 is how a user gets misled about coverage.
+        self.assertIn("# Entries: 1", out)
+        self.assertNotIn("# Entries: 3", out)
         self.assertEqual(out.count("# Localized:"), 1)
+
+    def test_generated_note_dropped_and_count_matches_body(self):
+        # build.py's note counts families the localized file no longer carries.
+        text = (HEADER.replace("# Entries: 3\n", "# Entries: 349\n# Note: 288 generated\n")
+                + "de.nextlgsdp.com\nus.nextlgsdp.com\nde.lgeapi.com\n")
+        out, _ = localize.rewrite_content(text, "fr")
+        self.assertNotIn("# Note:", out)
+        body = [l for l in out.splitlines() if l and not l.startswith("#")]
+        self.assertIn(f"# Entries: {len(body)}", out)
+        self.assertEqual(len(body), 2)  # nextlgsdp collapsed, lgeapi distinct
 
     def test_all_known_region_hostnames_rewritten(self):
         text = "".join(f"{h}\n" for h in REGION_HOSTS)
         out, count = localize.rewrite_content(text, "fr")
-        self.assertEqual(count, 6)
+        targets = {"fr." + h.split(".", 1)[1] for h in REGION_HOSTS}
+        self.assertEqual(count, len(targets))
         for host in REGION_HOSTS:
-            want = "fr." + host.split(".", 1)[1]
-            self.assertIn(want + "\n", out)
             self.assertNotIn(host + "\n", out)
+        for want in targets:
+            self.assertIn(want + "\n", out)
+
+    def test_collapsed_region_siblings_emitted_once(self):
+        # de./us. siblings of the same host rewrite to one name — not two lines.
+        text = HEADER + "de.nextlgsdp.com\nus.nextlgsdp.com\n"
+        out, count = localize.rewrite_content(text, "fr")
+        self.assertEqual(count, 1)
+        self.assertEqual(out.count("fr.nextlgsdp.com"), 1)
 
     def test_only_first_label_is_rewritten(self):
         # Later region-like labels must survive: only the first hostname label

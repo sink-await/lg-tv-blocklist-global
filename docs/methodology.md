@@ -190,3 +190,18 @@ What counts as evidence:
   (see [Format semantics](../CONTRIBUTING.md#format-semantics)).
 - **Region endpoints are enumerated only where observed.** If your region's
   endpoint is missing, it wasn't seen in the audit — submit it.
+- **Most entries are generated, and DNS-verified rather than observed.**
+  `src/regions.txt` lists 49 country codes; `scripts/build.py` cross-products
+  them against each `[REGION-SCOPED]` family, turning 20 audited SAFE hosts
+  into 212 and the STRICT delta from 32 into 99. Every generated name was
+  confirmed on 2026-09-12 to resolve to that region's LG infrastructure
+  (`us-lgeapi-com.esi-prd.net`, `aic-emp-lgsmartplatform-com.lgemp-prd.net`,
+  …), so existence and region are established — but no capture proves a TV in
+  that region queries it. Only the German entries carry observed evidence.
+  The full 294-name matrix was probed rather than sampled: 265 resolve, and the
+  29 that do not are all `ibs.nextlgsdp.com` (in-app billing exists in 20 of 49
+  markets), so that family carries an explicit market subset in its tag. A
+  negative control (`zz.`/`qq.`/`xj.` against every family) returns NXDOMAIN,
+  confirming no wildcard record inflates these results.
+  Each built list's header states its generated count. A regional query log
+  would upgrade these — see [CONTRIBUTING](../CONTRIBUTING.md).

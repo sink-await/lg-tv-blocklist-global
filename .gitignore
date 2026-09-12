@@ -1,3 +1,3 @@
 __pycache__/
 *.pyc
-lists-regions/
+# lists-regions/ is generated but COMMITTED — the README country links point at it.

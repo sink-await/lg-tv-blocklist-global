@@ -1,0 +1,27 @@
+# Title: LG TV Blocklist (safe) — Pi-hole regex filters
+# Updated: 2026-09-12 20:36 UTC
+# Entries: 5
+#
+# PASTE THESE INTO PI-HOLE'S REGEX FILTERS, NOT AN ADLIST. Adlists accept
+# exact domains only and will silently ignore every line here.
+#   Pi-hole UI: Domains -> Add domain -> Regex  (or: pihole --regex '<line>')
+#
+# AdGuard Home / uBlock Origin users do NOT need this file: the
+# safe-adblock.txt list already has wildcard semantics via ||name^.
+#
+# Why this is so much shorter than safe-domains.txt: one regex per host
+# family replaces that family's entry for every country code, and keeps
+# working when LG adds a market this list has not enumerated yet.
+# ^[a-z][a-z]\.family$ matches the two-letter region prefixes only; it
+# does NOT block the family apex or its other subdomains.
+#
+# Scope: these cover the region-prefixed hosts and the zone apexes. Keep
+# subscribing to safe-domains.txt for the specific audited hosts, which
+# have no wildcard equivalent.
+# License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/)
+
+^[a-z][a-z]\.emp\.lgsmartplatform\.com$
+^[a-z][a-z]\.nextlgsdp\.com$
+(\.|^)adsdtvc\.com$
+(\.|^)lgsmartad\.com$
+(\.|^)lgtvsdp\.com$

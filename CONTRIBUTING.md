@@ -16,12 +16,17 @@ a domain, collect evidence:
 If you only have a hunch, open an issue with the `new-domain` template
 instead of a PR — maintainers can verify from their own probes.
 
-**Regional query logs welcome:** include the region, timestamp, and client
-(TV model/name). Region-prefixed entries (`de.`, `us.`) can be extended with
-evidence from your region — regional coverage is the main gap in this list.
-New region prefixes must also be added to `SOURCE_REGION_LABELS` in
-`scripts/localize.py`; otherwise `localize.py` silently leaves those entries
-untouched.
+**Regional query logs are the most valuable evidence we can get.** Include
+the region, timestamp, and client (TV model/name). The lists cover 49 country
+codes, but only the German entries are traffic-observed — every other region
+is a DNS-verified cross-product (see [Region coverage](#region-coverage)), so
+a query log proving which hosts your TV actually contacts upgrades inference
+to evidence.
+
+To add a country code, verify it resolves first (`dig +short <cc>.lgeapi.com`)
+and add one line to `src/regions.txt`. Nothing else needs touching:
+`scripts/build.py` cross-products it, and `scripts/localize.py` reads the same
+file for its source labels.
 
 ## 2. Edit src/, never lists/
 
@@ -30,6 +35,34 @@ untouched.
   weak-evidence entries). Do not repeat safe entries here.
 - `src/zones.txt` — strict-only family apexes for whole-zone blocking in the
   adblock format.
+- `src/regions.txt` — country codes with confirmed LG regional endpoints, one
+  per line with the country name as its comment. Consumed by both scripts.
+
+## Region coverage
+
+LG runs a per-country endpoint matrix: `de.lgeapi.com`, `br.lgeapi.com`,
+`jp.lgeapi.com` all exist. Rather than hand-write ~50 lines per family, tag
+**one** audited entry with `[REGION-SCOPED]` in its annotation and
+`scripts/build.py` expands it across every code in `src/regions.txt`:
+
+```
+de.nextlgsdp.com # SAFE: SDP region endpoint, telemetry [REGION-SCOPED]
+```
+
+That one line becomes 49 entries at build time. Rules:
+
+- **The tag is explicit and never inferred from the hostname.** A two-letter
+  first label does not mean "country": `ad.lgappstv.com` is an ad host on the
+  store CDN, `am.`/`ig..lge.com` are unknown services, `su.lge.com` is the OTA
+  server. Tagging one of those would emit ~50 bogus store-CDN entries and
+  could break the Content Store for every user. CI has a test for this.
+- **Audited entries win.** A hand-written entry is never replaced by its
+  generated twin, so annotations and evidence survive.
+- **Generated entries are DNS-verified, not observed.** Each built list's
+  header states how many of its entries are generated. Do not describe them as
+  observed anywhere.
+- The tier follows the file: tag in `safe.txt` expands into SAFE, in
+  `strict.txt` into the STRICT delta.
 
 Every line needs an inline annotation — format, tags, and examples in
 [Annotated domains](#annotated-domains) below.
