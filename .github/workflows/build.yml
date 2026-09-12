@@ -68,6 +68,11 @@ jobs:
         run: python3 scripts/test_build.py
       - name: Run localize tests
         run: python3 scripts/test_localize.py
+      # verify.py's own tests are offline by design (classify() is pure), so
+      # they run here; the network check itself is manual/scheduled, never a
+      # PR gate -- LG decommissioning a host must not fail someone's PR.
+      - name: Run verify tests
+        run: python3 scripts/test_verify.py
 
   publish:
     if: github.event_name != 'pull_request' && needs.check.outputs.src_changed == 'true'

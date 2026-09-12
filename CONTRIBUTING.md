@@ -23,8 +23,10 @@ is a DNS-verified cross-product (see [Region coverage](#region-coverage)), so
 a query log proving which hosts your TV actually contacts upgrades inference
 to evidence.
 
-To add a country code, verify it resolves first (`dig +short <cc>.lgeapi.com`)
-and add one line to `src/regions.txt`. Nothing else needs touching:
+To add a country code, verify it resolves first — `python scripts/verify.py`
+checks every shipped entry over DNS-over-HTTPS, which matters because your own
+Pi-hole/AdGuard would otherwise sinkhole these names and report them all dead.
+Then add one line to `src/regions.txt`. Nothing else needs touching:
 `scripts/build.py` cross-products it, and `scripts/localize.py` reads the same
 file for its source labels.
 
