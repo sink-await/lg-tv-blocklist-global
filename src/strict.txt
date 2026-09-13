@@ -45,7 +45,8 @@ lgshopsvc.lgappstv.com # STRICT: weak — LG Shop service (SDX); community repor
 # Found by taking each eic.* entry's stem and probing the other clusters over
 # DNS-over-HTTPS; every entry below returned NOERROR with an A record on
 # 2026-09-12. Tier follows the audited cluster sibling, not the zone apex.
-# Evidence grade: DNS existence, not traffic observation (see CERTIFICATES.md).
+# Evidence grade: DNS existence plus a TLS certificate valid for the exact
+# name, checked 2026-09-13 (see CERTIFICATES.md) -- not traffic observation.
 aic-gfts.lge.com # STRICT: file transfer service — aic (Americas) datacentre cluster; DNS-verified 2026-09-12
 aic-ngfts.lge.com # STRICT: firmware/content file transfer — aic (Americas) datacentre cluster; DNS-verified 2026-09-12
 aic-ngfts.nextlgsdp.com # STRICT: update transfer on SDP family — aic (Americas) datacentre cluster; DNS-verified 2026-09-12
@@ -57,13 +58,13 @@ aic.lgchhomeapp.lgtvcommon.com # STRICT: weak — home-app service — aic (Amer
 aic.lgeapi.com # STRICT: weak — region API, store/billing interplay unproven — aic (Americas) datacentre cluster; DNS-verified 2026-09-12
 aic.lggalleryplus.com # STRICT: weak — Gallery+/SDX endpoint — aic (Americas) datacentre cluster; DNS-verified 2026-09-12
 aic.lgshopsvc.lgappstv.com # STRICT: weak — LG Shop service (SDX) — aic (Americas) datacentre cluster; DNS-verified 2026-09-12
-aic.lgthinq.com # STRICT: weak — ThinQ cloud entry point — aic (Americas) datacentre cluster; DNS-verified 2026-09-12
+aic.lgthinq.com # STRICT: weak — ThinQ cloud entry point — aic (Americas) datacentre cluster; DNS-verified 2026-09-12; grade 1 only — resolves (Azure) but no TLS answer on 443, so no certificate evidence
 aic.service.lgtvcommon.com # STRICT: weak — common-services endpoint, store interplay unproven — aic (Americas) datacentre cluster; DNS-verified 2026-09-12; bare service.lgtvcommon.com is now NXDOMAIN, so this is where the service lives
 eic-ngfts.nextlgsdp.com # STRICT: update transfer on SDP family — eic (Europe) datacentre cluster; DNS-verified 2026-09-12
 eic.lgeapi.com # STRICT: weak — region API, store/billing interplay unproven — eic (Europe) datacentre cluster; DNS-verified 2026-09-12
 eic.lggalleryplus.com # STRICT: weak — Gallery+/SDX endpoint — eic (Europe) datacentre cluster; DNS-verified 2026-09-12
 eic.lgshopsvc.lgappstv.com # STRICT: weak — LG Shop service (SDX) — eic (Europe) datacentre cluster; DNS-verified 2026-09-12
-eic.lgthinq.com # STRICT: weak — ThinQ cloud entry point — eic (Europe) datacentre cluster; DNS-verified 2026-09-12
+eic.lgthinq.com # STRICT: weak — ThinQ cloud entry point — eic (Europe) datacentre cluster; DNS-verified 2026-09-12; grade 1 only — resolves (Azure) but no TLS answer on 443, so no certificate evidence
 eic.service.lgtvcommon.com # STRICT: weak — common-services endpoint, store interplay unproven — eic (Europe) datacentre cluster; DNS-verified 2026-09-12; bare service.lgtvcommon.com is now NXDOMAIN, so this is where the service lives
 kic-gfts.lge.com # STRICT: file transfer service — kic (Korea) datacentre cluster; DNS-verified 2026-09-12
 kic-ngfts.lge.com # STRICT: firmware/content file transfer — kic (Korea) datacentre cluster; DNS-verified 2026-09-12
@@ -75,5 +76,5 @@ kic.cdplauncher.lgtvcommon.com # STRICT: weak — content-launcher/CDP service �
 kic.lgchhomeapp.lgtvcommon.com # STRICT: weak — home-app service — kic (Korea) datacentre cluster; DNS-verified 2026-09-12
 kic.lgeapi.com # STRICT: weak — region API, store/billing interplay unproven — kic (Korea) datacentre cluster; DNS-verified 2026-09-12
 kic.lggalleryplus.com # STRICT: weak — Gallery+/SDX endpoint — kic (Korea) datacentre cluster; DNS-verified 2026-09-12
-kic.lgthinq.com # STRICT: weak — ThinQ cloud entry point — kic (Korea) datacentre cluster; DNS-verified 2026-09-12
+kic.lgthinq.com # STRICT: weak — ThinQ cloud entry point — kic (Korea) datacentre cluster; DNS-verified 2026-09-12; grade 1 only — resolves (Azure) but no TLS answer on 443, so no certificate evidence
 kic.service.lgtvcommon.com # STRICT: weak — common-services endpoint, store interplay unproven — kic (Korea) datacentre cluster; DNS-verified 2026-09-12; bare service.lgtvcommon.com is now NXDOMAIN, so this is where the service lives

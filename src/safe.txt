@@ -34,7 +34,8 @@ info.lgsmartad.com # SAFE: ad info endpoint (admanager poll ~60s); community rep
 # Found by taking each eic.* entry's stem and probing the other clusters over
 # DNS-over-HTTPS; every entry below returned NOERROR with an A record on
 # 2026-09-12. Tier follows the audited cluster sibling, not the zone apex.
-# Evidence grade: DNS existence, not traffic observation (see CERTIFICATES.md).
+# Evidence grade: DNS existence plus a TLS certificate valid for the exact
+# name, checked 2026-09-13 (see CERTIFICATES.md) -- not traffic observation.
 aic.ads.lgtvcommon.com # SAFE: ad delivery — aic (Americas) datacentre cluster; DNS-verified 2026-09-12; bare ads.lgtvcommon.com is now NXDOMAIN, so this is where the service lives
 aic.api.lgtviot.com # SAFE: IoT telemetry API — aic (Americas) datacentre cluster; DNS-verified 2026-09-12
 aic.cdpbeacon.lgtvcommon.com # SAFE: telemetry/ACR beacon (~6-min heartbeat) — aic (Americas) datacentre cluster; DNS-verified 2026-09-12; bare cdpbeacon.lgtvcommon.com is now NXDOMAIN, so this is where the service lives

@@ -61,11 +61,17 @@ That one line becomes 49 entries at build time. Rules:
 - **Datacentre clusters are a separate axis, listed explicitly.** `eic`
   (Europe), `aic` (Americas) and `kic` (Korea) front the same service from
   three continents. They are *not* handled by `[REGION-SCOPED]` — each is its
-  own verified entry, because not every stem exists in every cluster. When you
+  own verified entry, because not every stem exists in every cluster
+  (`kic.lgshopsvc.lgappstv.com` does not, while `aic.`/`eic.` do). When you
   add a clustered host, probe all three and add every one that resolves;
   submitting only the cluster your own TV uses is how this list ended up
   missing 53 live endpoints. Tier follows the cluster sibling, never the zone
-  apex: `eic.lgtviot.com` is SAFE, so `aic.`/`kic.lgtviot.com` are too.
+  apex — but only once the twin presents a certificate valid for its exact name
+  (grade 2, see [CERTIFICATES.md](CERTIFICATES.md)): `eic.lgtviot.com` is SAFE,
+  so `aic.`/`kic.lgtviot.com` are too. A twin with DNS existence alone is weak
+  evidence and belongs in `strict.txt` tagged `weak`. Upstream's SAFE tier
+  requires traffic observation and has no grade-2 carve-out, which is why these
+  22 entries sit in STRICT there and in SAFE here.
 - **Audited entries win.** A hand-written entry is never replaced by its
   generated twin, so annotations and evidence survive.
 - **Generated entries are DNS-verified, not observed.** Each built list's

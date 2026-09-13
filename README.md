@@ -36,11 +36,11 @@ Evidence is graded, not asserted. The German entries are traffic-observed; the r
 
 ### Shortest path: the wildcard version
 
-If your blocker does wildcards, **17 regex lines replace all 320 exact entries** — and they keep covering new LG regional endpoints this list has never enumerated.
+If your blocker does wildcards, **17 regex lines replace all 373 exact entries** — and they keep covering new LG regional endpoints this list has never enumerated.
 
 | | Lines | Get it |
 |---|---|---|
-| SAFE | 5 | [safe-wildcard.txt](https://raw.githubusercontent.com/sink-await/lg-tv-blocklist-global/main/lists/safe-wildcard.txt) |
+| SAFE | 14 | [safe-wildcard.txt](https://raw.githubusercontent.com/sink-await/lg-tv-blocklist-global/main/lists/safe-wildcard.txt) |
 | STRICT | 17 | [strict-wildcard.txt](https://raw.githubusercontent.com/sink-await/lg-tv-blocklist-global/main/lists/strict-wildcard.txt) |
 
 **Pi-hole: these go in Regex filters, not an adlist.** An adlist accepts exact domains only and will silently ignore every line, leaving you unprotected with no error. Paste them under *Domains → Add domain → Regex*, or `pihole --regex '<line>'` per line.
@@ -67,7 +67,7 @@ Checksums: [SHA256SUMS](https://raw.githubusercontent.com/sink-await/lg-tv-block
 
 ## Per-country lists
 
-Right-click → copy link for your country, paste into your blocker. These carry the same global entries as the files above but only your region's endpoints — about 61 entries instead of 320, so you are not blocking 48 other countries' servers. Markets without in-app billing get 60 — that endpoint does not exist there.
+Right-click → copy link for your country, paste into your blocker. These carry the same global entries as the files above but only your region's endpoints — about 114 entries instead of 373, so you are not blocking 48 other countries' servers. Markets without in-app billing get 113 — that endpoint does not exist there.
 
 | Format | For |
 |---|---|
