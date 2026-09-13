@@ -1,7 +1,7 @@
 # Title: LG TV Blocklist (safe)
-# Updated: 2026-09-13 17:38 UTC
+# Updated: 2026-09-13 17:47 UTC
 # Entries: 234
-# Note: 192 of these are generated region endpoints (49 country codes x 6 host families). Generated entries are DNS-verified only -- they resolve to that region's LG infrastructure -- not traffic-observed. The audited entries are annotated in src/.
+# Note: 191 of these are generated region endpoints (49 country codes x 6 host families). Generated entries are DNS-verified only -- they resolve to that region's LG infrastructure -- not traffic-observed. The audited entries are annotated in src/.
 # License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/)
 
 ||ad.lgappstv.com^

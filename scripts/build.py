@@ -458,7 +458,8 @@ def build() -> None:
     for name in sorted(all_outputs):
         digest = hashlib.sha256((LISTS / name).read_bytes()).hexdigest()
         checksums.append(f"{digest}  {name}")
-    # newline="\n": CRLF here breaks `sha256sum -c` on Windows checkouts.
+    # newline="\n" like the list files above: without it Python translates to
+    # CRLF on a Windows checkout and `sha256sum -c SHA256SUMS` cannot read it.
     (LISTS / "SHA256SUMS").write_text(
         "\n".join(checksums) + "\n", encoding="utf-8", newline="\n")
     for name in sorted(all_outputs):
