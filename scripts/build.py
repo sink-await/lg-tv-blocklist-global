@@ -352,14 +352,46 @@ def compile_tier(tier: str, domains: list[str], zones: list[str],
     return outputs
 
 
+COUNTRY_VERIFIED_LEGEND = (
+    "**✅ VERIFIED** — this country code has at least one hand-audited entry in "
+    "`src/`, with its evidence on the line. A blank cell means every entry for "
+    "that code is generated from an audited sibling: DNS-verified and "
+    "TLS-verified (see [CERTIFICATES.md](CERTIFICATES.md)), never "
+    "traffic-observed. `de` is the G1 audit and `ca` a C1 querylog from Canada; "
+    "`us.lgtvsdp.com` was seen in the German capture rather than from a US TV. "
+    "A query log from your region is what turns a blank cell into a check — see "
+    "[CONTRIBUTING](CONTRIBUTING.md#1-evidence-over-guesses)."
+)
+
+
 def flag(code: str) -> str:
     """Regional-indicator flag emoji for a two-letter country code."""
     return "".join(chr(0x1F1E6 + ord(ch) - ord("a")) for ch in code)
 
 
+def audited_region_codes() -> set[str]:
+    """Country codes carrying a hand-written entry, not just generated ones.
+
+    Two filters, both needed. The code must be in regions.txt, and the entry's
+    family must be [REGION-SCOPED] -- ad.lgappstv.com is an ad host on the store
+    CDN and su.lge.com is the OTA server, so a two-letter first label alone
+    would hand Andorra and the Soviet Union a verification mark.
+    """
+    codes = set(parse_regions())
+    families = {**region_patterns("safe.txt"), **region_patterns("strict.txt")}
+    audited = set()
+    for filename in ("safe.txt", "strict.txt"):
+        for host in parse_src(filename):
+            first, _, rest = host.partition(".")
+            if first in codes and rest in families:
+                audited.add(first)
+    return audited
+
+
 def country_table(regions: dict[str, str]) -> str:
     """Markdown table of copy-paste list URLs, one row per country."""
-    rows = ["| Country | SAFE | STRICT |", "|---|---|---|"]
+    audited = audited_region_codes()
+    rows = ["| Country | SAFE | STRICT | VERIFIED |", "|---|---|---|---|"]
     for code, name in regions.items():
         cells = [
             " · ".join(
@@ -367,7 +399,9 @@ def country_table(regions: dict[str, str]) -> str:
                 for fmt in ("domains", "adblock", "hosts"))
             for tier in ("safe", "strict")
         ]
-        rows.append(f"| {flag(code)} {name} `{code}` | {cells[0]} | {cells[1]} |")
+        mark = "✅" if code in audited else ""
+        rows.append(f"| {flag(code)} {name} `{code}` | {cells[0]} | {cells[1]} | {mark} |")
+    rows += ["", COUNTRY_VERIFIED_LEGEND]
     return "\n".join(rows)
 
 

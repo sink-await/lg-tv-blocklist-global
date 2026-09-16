@@ -235,6 +235,11 @@ class TestRegionCrossProduct(unittest.TestCase):
                          {"br": "Brazil", "de": "Germany", "zz": "ZZ"})
 
     def test_country_table_links_every_country_and_format(self):
+        # country_table reads src/ for the VERIFIED column
+        self.write("regions.txt", "br # Brazil\nus # United States\n")
+        self.write("safe.txt",
+                   "us.lgtvsdp.com # SAFE: SDP telemetry [REGION-SCOPED]\n")
+        self.write("strict.txt", "")
         table = build.country_table({"br": "Brazil", "us": "United States"})
         for code in ("br", "us"):
             for tier in ("safe", "strict"):
@@ -242,6 +247,50 @@ class TestRegionCrossProduct(unittest.TestCase):
                     self.assertIn(f"/lists-regions/{code}/{tier}-{fmt}.txt", table)
         self.assertIn("🇧🇷", table)
         self.assertIn("🇺🇸", table)
+
+    def test_verified_column_marks_only_hand_audited_codes(self):
+        self.write("regions.txt", "de # Germany\nbr # Brazil\n")
+        self.write("safe.txt", "de.nextlgsdp.com # SAFE: telemetry [REGION-SCOPED]\n")
+        self.write("strict.txt", "")
+        self.assertEqual(build.audited_region_codes(), {"de"})
+
+        rows = {line.split("`")[1]: line
+                for line in build.country_table({"de": "Germany", "br": "Brazil"}).splitlines()
+                if line.startswith("| ")and "`" in line}
+        self.assertIn("✅", rows["de"])
+        self.assertNotIn("✅", rows["br"])          # generated only, no evidence
+        # every row keeps four cells, so the column cannot silently misalign
+        for code, line in rows.items():
+            with self.subTest(code=code):
+                self.assertEqual(line.count(" | "), 3, line)
+
+    def test_two_letter_service_prefix_never_earns_a_mark(self):
+        """ad.lgappstv.com is an ad host on the store CDN, not Andorra; su.lge.com
+        is the OTA server, not the Soviet Union. Both have two-letter first
+        labels, and neither family is region-scoped."""
+        self.write("regions.txt", "ad # Andorra\nsu # Soviet Union\nde # Germany\n")
+        self.write("safe.txt", "ad.lgappstv.com # SAFE: ad delivery\n"
+                               "de.nextlgsdp.com # SAFE: telemetry [REGION-SCOPED]\n")
+        self.write("strict.txt", "su.lge.com # STRICT: OTA update server\n")
+        self.assertEqual(build.audited_region_codes(), {"de"})
+
+    def test_verified_mark_needs_the_family_to_be_region_scoped(self):
+        """A hand-written entry under an untagged family is still just one host:
+        nothing says LG serves that family per country."""
+        self.write("regions.txt", "de # Germany\nus # United States\n")
+        self.write("safe.txt", "de.nextlgsdp.com # SAFE: telemetry [REGION-SCOPED]\n"
+                               "us.lgtvsdp.com # SAFE: SDP telemetry\n")
+        self.write("strict.txt", "")
+        self.assertEqual(build.audited_region_codes(), {"de"})
+
+    def test_table_carries_the_legend_explaining_the_mark(self):
+        self.write("regions.txt", "de # Germany\n")
+        self.write("safe.txt", "de.nextlgsdp.com # SAFE: telemetry [REGION-SCOPED]\n")
+        self.write("strict.txt", "")
+        table = build.country_table({"de": "Germany"})
+        self.assertIn("VERIFIED", table)
+        self.assertIn("hand-audited", table)
+        self.assertIn("never", table)              # ...never traffic-observed
 
     def test_readme_missing_markers_raises(self):
         orig = build.README
