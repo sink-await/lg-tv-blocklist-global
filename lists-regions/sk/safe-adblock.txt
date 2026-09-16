@@ -1,5 +1,5 @@
 # Title: LG TV Blocklist (safe)
-# Updated: 2026-09-16 02:05 UTC
+# Updated: 2026-09-16 02:22 UTC
 # Entries: 42
 # Note: Slovakia (sk) only -- global entries plus this region's endpoints; other regions' are omitted. Regional endpoints are DNS-verified (they resolve to this region's LG infrastructure), not traffic-observed.
 # License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/)
